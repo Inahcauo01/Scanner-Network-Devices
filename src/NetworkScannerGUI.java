@@ -25,10 +25,12 @@ public class NetworkScannerGUI {
         JPanel buttonPanel = new JPanel();
         buttonPanel.add(scanButton);
         frame.add(buttonPanel, "South");
+        frame.add(countLabel, "North");
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(400, 300);
         frame.setVisible(true);
+        frame.setLocationRelativeTo(null);
     }
 
     private void scanNetwork() {
