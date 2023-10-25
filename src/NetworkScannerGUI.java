@@ -1,5 +1,7 @@
 import java.awt.*;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.util.concurrent.ExecutorService;
@@ -13,6 +15,7 @@ public class NetworkScannerGUI {
     private JTable deviceTable;
     private DefaultTableModel tableModel;
     private JLabel countLabel;
+    private JButton scanButton;
 
     public NetworkScannerGUI() {
         frame = new JFrame("Network Scanner");
@@ -24,7 +27,7 @@ public class NetworkScannerGUI {
         JScrollPane scrollPane = new JScrollPane(deviceTable);
         countLabel = new JLabel("Devices Found: 0");
 
-        JButton scanButton = new JButton("Scan Network");
+        scanButton = new JButton("Scan Network");
         scanButton.addActionListener(e -> scanNetwork());
         JPanel buttonPanel = new JPanel();
         buttonPanel.add(scanButton);
@@ -41,6 +44,9 @@ public class NetworkScannerGUI {
     }
 
     private void scanNetwork() {
+        // Disable the scan button
+        scanButton.setEnabled(false);
+
         tableModel.setRowCount(0); // Clear the table
 
         AtomicInteger deviceCount = new AtomicInteger();
@@ -72,6 +78,8 @@ public class NetworkScannerGUI {
         }
 
         executorService.shutdown();
+
+        scanButton.setEnabled(true);
     }
 
     private String getMacAddress(InetAddress address) {
