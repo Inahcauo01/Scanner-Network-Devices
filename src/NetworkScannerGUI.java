@@ -1,26 +1,24 @@
 import java.io.IOException;
 import java.net.InetAddress;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
+import java.util.concurrent.atomic.AtomicInteger;
+import javax.swing.*;
 
 public class NetworkScannerGUI {
     private JFrame frame;
     private JList<String> ipList;
     private DefaultListModel<String> listModel;
+    private JLabel countLabel;
+
 
     public NetworkScannerGUI() {
         frame = new JFrame("Network Scanner");
         listModel = new DefaultListModel<>();
         ipList = new JList<>(listModel);
         frame.add(new JScrollPane(ipList));
+        countLabel = new JLabel("Devices Found: 0");
+
 
         JButton scanButton = new JButton("Scan Network");
         scanButton.addActionListener(e -> scanNetwork());
@@ -35,6 +33,8 @@ public class NetworkScannerGUI {
 
     private void scanNetwork() {
         listModel.clear();
+
+        AtomicInteger deviceCount = new AtomicInteger();
 
         String baseIp = "192.168.1";
         int timeout = 1000; // Timeout in milliseconds
@@ -51,6 +51,9 @@ public class NetworkScannerGUI {
                     InetAddress address = InetAddress.getByName(ipAddress);
                     if (address.isReachable(timeout)) {
                         listModel.addElement("Device found at IP: " + ipAddress);
+                        deviceCount.getAndIncrement();
+                        System.out.println(deviceCount);
+                        countLabel.setText("Devices Found: " + deviceCount);
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
